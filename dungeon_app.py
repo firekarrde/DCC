@@ -761,6 +761,18 @@ HTML_TEMPLATE = """
   ul.plain li { padding: 3px 0; border-bottom: 1px dashed #23262f; }
   .tag-row { display: flex; flex-wrap: wrap; gap: 6px; }
   .tag { font-size: 0.7rem; padding: 3px 8px; border-radius: 12px; cursor: help; }
+  [data-tip] { position: relative; cursor: help; }
+  [data-tip]::after {
+    content: attr(data-tip);
+    position: absolute; bottom: 125%; left: 0;
+    background: #1e2129; border: 1px solid var(--panel-edge); color: var(--ink);
+    padding: 6px 10px; border-radius: 6px; font-size: 0.72rem; line-height: 1.35;
+    white-space: normal; width: max-content; max-width: 220px; text-align: left;
+    opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.1s ease;
+    z-index: 50; box-shadow: 0 4px 14px rgba(0,0,0,0.45);
+  }
+  [data-tip]:hover::after { opacity: 1; visibility: visible; }
+  .action-btn[data-tip] { cursor: pointer; }
   .tag.curse { background: rgba(255,91,91,0.15); color: var(--danger); border: 1px solid var(--danger); }
   .tag.boon { background: rgba(77,220,138,0.15); color: var(--good); border: 1px solid var(--good); }
   .center { display: flex; flex-direction: column; min-width: 0; }
@@ -915,7 +927,7 @@ HTML_TEMPLATE = """
       const name = id ? CATALOG.items[id].name : "(none)";
       const li = document.createElement("li");
       li.textContent = slot.toUpperCase() + ": " + name;
-      if (id) li.title = CATALOG.items[id].description;
+      if (id) li.dataset.tip = CATALOG.items[id].description;
       eq.appendChild(li);
     });
 
@@ -924,7 +936,7 @@ HTML_TEMPLATE = """
     p.inventory.forEach(function (entry) {
       const item = CATALOG.items[entry.id];
       const li = document.createElement("li");
-      li.title = item.description;
+      if (item.description) li.dataset.tip = item.description;
       li.textContent = item.name + " x" + entry.qty;
       inv.appendChild(li);
     });
@@ -936,7 +948,7 @@ HTML_TEMPLATE = """
       const cd = p.skill_cooldowns[sid] || 0;
       const li = document.createElement("li");
       li.textContent = s.name + (s.mana_cost ? " (" + s.mana_cost + " MP)" : "") + (cd > 0 ? " [CD " + cd + "]" : "");
-      li.title = s.description || "";
+      if (s.description) li.dataset.tip = s.description;
       sk.appendChild(li);
     });
 
@@ -946,7 +958,7 @@ HTML_TEMPLATE = """
       const c = CATALOG.curses[cid];
       const span = document.createElement("span");
       span.className = "tag curse";
-      span.title = c.description;
+      span.dataset.tip = c.description;
       span.textContent = c.name;
       curseEl.appendChild(span);
     });
@@ -957,7 +969,7 @@ HTML_TEMPLATE = """
       const b = CATALOG.boons[bid];
       const span = document.createElement("span");
       span.className = "tag boon";
-      span.title = b.description;
+      span.dataset.tip = b.description;
       span.textContent = b.name;
       boonEl.appendChild(span);
     });
@@ -993,7 +1005,8 @@ HTML_TEMPLATE = """
       const btn = document.createElement("button");
       btn.className = "action-btn";
       btn.textContent = labelFor(choice);
-      btn.title = titleFor(choice);
+      const tip = titleFor(choice);
+      if (tip) btn.dataset.tip = tip;
       btn.addEventListener("click", function () { doAction(choice); });
       actions.appendChild(btn);
     });
