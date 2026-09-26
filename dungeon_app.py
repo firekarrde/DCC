@@ -379,7 +379,7 @@ CATALOG = {
     "monsters": {mid: {"name": d["name"]} for mid, d in MONSTERS.items()},
 }
 
-SYSTEM_PROMPT = """You are the narration voice for THE DUNGEON CRAWLER CARL SHOW, a reality-TV \
+SYSTEM_PROMPT = """You are the narration voice for DUNGEON: EARTH, a reality-TV \
 broadcast beamed across the galaxy from inside an alien-run dungeon. You never decide what happens - a \
 separate system already resolved the numbers. Your only job is to narrate, in character, what the given \
 EVENT(S) mean.
@@ -403,8 +403,8 @@ the EVENT(S) or STATE given to you.
 - Never break the ANNOUNCER:/CAT: line format, and never add any other lines or headers.
 """
 
-OPENING_LINE = ("Ladies, gentlemen, and things that used to be either: welcome back to THE DUNGEON "
-                "CRAWLER CARL SHOW! Our next Crawler stumbles in wearing nothing but his Enchanted "
+OPENING_LINE = ("Ladies, gentlemen, and things that used to be either: welcome back to DUNGEON: "
+                "EARTH! Our next Crawler stumbles in wearing nothing but his Enchanted "
                 "BigBoi Boxers and a bad attitude, flanked by one deeply unimpressed cat who insists on "
                 "being called Princess Donut. Let's see how far boxers-and-bravado gets him. Floor One... GO!")
 
@@ -982,7 +982,7 @@ def narrate(events, state_slice):
         response = client.chat.completions.create(model=MODEL, messages=messages, max_tokens=220)
         text = response.choices[0].message.content or ""
     except Exception as e:
-        text = f"ANNOUNCER: [SIGNAL LOST] The Program apologizes for the technical difficulties. ({e})"
+        text = f"ANNOUNCER: [SIGNAL LOST] Dungeon: Earth apologizes for the technical difficulties. ({e})"
     return parse_narration(text)
 
 
@@ -1072,7 +1072,7 @@ HTML_TEMPLATE = """
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>THE PROGRAM</title>
+<title>Dungeon: Earth</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -1178,8 +1178,8 @@ HTML_TEMPLATE = """
 </head>
 <body>
   <div class="titlebar">
-    <h1>THE PROGRAM</h1>
-    <button class="new-game-btn" id="newGameBtn">Start New Descent</button>
+    <h1>DUNGEON: EARTH</h1>
+    <button class="new-game-btn" id="newGameBtn">Start New Crawl</button>
   </div>
   <div class="layout">
     <aside class="panel">
@@ -1220,14 +1220,14 @@ HTML_TEMPLATE = """
       <div id="log"></div>
       <div id="actions"></div>
       <form class="composer" id="banterForm">
-        <input id="banterInput" autocomplete="off" placeholder="Heckle the announcer, talk to your cat..." aria-label="Banter" />
+        <input id="banterInput" autocomplete="off" placeholder="Heckle Al, talk to Donut..." aria-label="Banter" />
         <button type="submit">Send</button>
       </form>
     </section>
   </div>
   <div id="overlay">
     <div id="overlayText">-</div>
-    <button class="new-game-btn" id="overlayNewGameBtn">Start New Descent</button>
+    <button class="new-game-btn" id="overlayNewGameBtn">Start New Crawl</button>
   </div>
 
 <script>
