@@ -28,93 +28,345 @@ GAME_STATE = None
 # ---------------------------------------------------------------------------
 
 ITEMS = {
-    "rusty_shiv": {"name": "Rusty Shiv", "type": "weapon", "power": 8,
-                   "description": "It's seen better days. So have you."},
-    "frying_pan": {"name": "Cast-Iron Frying Pan", "type": "weapon", "power": 8,
-                   "description": "Sponsor-provided. Surprisingly good in a fight."},
-    "auctioneer_gavel": {"name": "Auctioneer's Gavel", "type": "weapon", "power": 13,
-                          "description": "SOLD! To the guy who just won this fight."},
-    "sewer_boots": {"name": "Sewer Boots", "type": "armor", "def": 3,
-                    "description": "Waterproof. Mostly."},
-    "static_charm": {"name": "Static Charm", "type": "trinket", "crit_bonus": 0.08,
-                      "description": "Crackles faintly. Makes your hits meaner."},
-    "patchup_potion": {"name": "Patch-Up Potion", "type": "consumable", "heal": 15,
-                        "description": "Tastes like a Band-Aid. Works like one too."},
-    "mana_tonic": {"name": "Mana Tonic", "type": "consumable", "mana": 10,
+    "scrap_pipe": {"name": "Scrap Pipe", "type": "weapon", "power": 10,
+                   "description": "Tutorial-tunnel plumbing. Somebody left it right where you needed it."},
+    "bigboi_boxers": {"name": "Enchanted BigBoi Boxers", "type": "armor", "def": 2,
+                       "description": "The only thing you're wearing. Turns out that's enough to matter."},
+    "crawler_ration": {"name": "Crawler Ration", "type": "consumable", "heal": 25,
+                        "description": "Sponsor-issued nutrient paste. Tastes like regret, works like magic."},
+    "mana_tonic": {"name": "Mana Toast", "type": "consumable", "mana": 15,
                     "description": "Fizzy, blue, and faintly radioactive-tasting. Refills a solid chunk of mana."},
+    "field_ration_supreme": {"name": "Field Ration Supreme", "type": "consumable", "heal": 60,
+                               "description": "The good stuff. Sponsors only send this once you're worth the airtime."},
+    "greater_mana_tonic": {"name": "Greater Mana Tonic", "type": "consumable", "mana": 35,
+                             "description": "Tastes like the first one, but it hits like a freight train."},
+    "goblin_pass_tattoo": {"name": "Goblin Pass Tattoo", "type": "trinket", "crit_bonus": 0.05,
+                             "description": "A crude tattoo that lets goblins mistake you for one of their own, sort of."},
+    "goblin_war_axe": {"name": "Goblin War Chieftain's Axe", "type": "weapon", "power": 16,
+                         "description": "Still warm. You earned this one the hard way."},
+    "bigboi_boxers_upgraded": {"name": "Upgraded BigBoi Boxers", "type": "armor", "def": 7,
+                                 "description": "Reinforced after the Krakaren incident. They charge a Protective Shell now."},
+    "gorgons_lucky_pebble": {"name": "Gorgon's Lucky Pebble", "type": "trinket", "crit_bonus": 0.07,
+                               "description": "Smooth, gray, and probably not a real pebble. Very lucky, though."},
+    "bigboi_boxers_supreme": {"name": "Supreme BigBoi Boxers", "type": "armor", "def": 12,
+                                "description": "The Over City tailors outdid themselves. These are basically a personality now."},
+    "dungeon_anarchists_cookbook": {"name": "Dungeon Anarchist's Cookbook", "type": "trinket", "crit_bonus": 0.08,
+                                       "description": "A hidden guide passed down from earlier crawlers, dog-eared and stained."},
+    "demon_engine_piston": {"name": "Demon Engine Piston", "type": "weapon", "power": 26,
+                              "description": "Ripped straight from the Iron Tangle's worst train. Still hisses steam."},
+    "rockards_ring_of_sniping": {"name": "Rockard's Ring of Sniping", "type": "trinket", "crit_bonus": 0.10,
+                                    "description": "Named after someone who is, notably, not you. Works great anyway."},
+    "krakenbone_harpoon": {"name": "Krakenbone Harpoon", "type": "weapon", "power": 34,
+                              "description": "Carved from something you'd rather not think about. Still dripping."},
+    "shrink_wand": {"name": "Shrink Wand", "type": "trinket", "crit_bonus": 0.11,
+                      "description": "Point, click, regret. Mostly used on hunters who had it coming."},
+    "imogens_scepter": {"name": "Queen Imogen's Scepter", "type": "weapon", "power": 42,
+                          "description": "A country boss's scepter. It remembers being swung. A lot."},
+    "earth_hobby_potion": {"name": "Earth Hobby Potion", "type": "consumable", "heal": 45,
+                             "description": "Grants a fleeting mastery of Cesta Punta. Mostly just heals a lot, honestly."},
 }
 
 SKILLS = {
     "basic_attack": {"name": "Basic Attack", "unlock_level": 1, "mana_cost": 0, "cooldown": 0, "damage_mult": 1.0,
                       "description": "A standard hit with your equipped weapon. No cost, no cooldown."},
-    "power_slap": {"name": "Power Slap", "unlock_level": 1, "mana_cost": 0, "cooldown": 2, "damage_mult": 1.6,
-                    "description": "A heavier swing for 60% more damage than a basic attack. 2-round cooldown."},
-    "cats_distraction": {"name": "Cat's Distraction", "unlock_level": 1, "mana_cost": 5, "cooldown": 3,
-                          "description": "Your cat darts in and distracts the enemy, lowering its chance to hit you next turn. Costs 5 mana, 3-round cooldown."},
-    "adrenaline_surge": {"name": "Adrenaline Surge", "unlock_level": 2, "mana_cost": 10, "cooldown": 4, "heal": 12,
-                          "description": "Heals you for 12 HP and boosts your next attack's damage by 30%. Costs 10 mana, 4-round cooldown."},
-    "improvised_throw": {"name": "Improvised Throw", "unlock_level": 3, "mana_cost": 0, "cooldown": 3,
-                          "damage_mult": 2.0,
-                          "description": "Hurl an item from your inventory for a heavy burst of damage (2x normal). Consumes the item. 3-round cooldown."},
+    "powerful_strike": {"name": "Powerful Strike", "unlock_level": 1, "mana_cost": 0, "cooldown": 2, "damage_mult": 1.6,
+                          "description": "A heavier swing for 60% more damage than a basic attack. 2-round cooldown."},
+    "donuts_diversion": {"name": "Donut's Diversion", "unlock_level": 1, "mana_cost": 5, "cooldown": 3,
+                          "heal": 10,
+                          "description": "Donut launches a real distraction: the enemy's next attack completely misses, and you patch yourself up for 10 HP while it's busy. Costs 5 mana, 3-round cooldown."},
+    "protective_shell": {"name": "Protective Shell", "unlock_level": 2, "mana_cost": 10, "cooldown": 4, "heal": 12,
+                          "description": "Your Boxers charge up: heals you for 12 HP and boosts your next attack's damage by 30%. Costs 10 mana, 4-round cooldown."},
+    "smush": {"name": "Smush", "unlock_level": 2, "mana_cost": 8, "cooldown": 3, "damage_mult": 1.4,
+              "description": "A crushing blow for 40% more damage, and 50% more on top of that against a badly wounded enemy. Costs 8 mana, 3-round cooldown."},
+    "iron_punch": {"name": "Iron Punch", "unlock_level": 3, "mana_cost": 6, "cooldown": 3, "damage_mult": 1.3,
+                   "def_pierce": 0.5,
+                   "description": "A gauntleted punch that shrugs off half the target's defense. 30% bonus damage. Costs 6 mana, 3-round cooldown."},
+    "bomb_toss": {"name": "Bomb Toss", "unlock_level": 4, "mana_cost": 0, "cooldown": 3,
+                  "damage_mult": 2.0,
+                  "description": "Hurl an item from your inventory (Goblin Dynamite, if you've got it) for a heavy burst of damage. Consumes the item. 3-round cooldown."},
 }
 
 CURSES = {
     "glass_jaw": {"name": "Glass Jaw", "description": "Your max HP took a permanent hit.", "hp_max_delta": -8},
-    "product_placement_debt": {"name": "Product Placement Debt",
-                                "description": "You owe the sponsors. Gold trickles away each floor.",
-                                "gold_per_floor": -10},
+    "sponsor_debt": {"name": "Sponsor Debt",
+                      "description": "You owe the show's sponsors. Gold trickles away each floor.",
+                      "gold_per_floor": -10},
 }
 
 BOONS = {
-    "fan_favorite": {"name": "Fan Favorite", "description": "The crowd loves you. +10% XP earned.",
+    "fan_favorite": {"name": "Fan Favorite", "description": "The viewers love you. +10% XP earned.",
                       "xp_mult": 1.10},
-    "lucky_paw": {"name": "Lucky Paw", "description": "Your cat rubbed off on you. +8% crit chance.",
-                  "crit_bonus": 0.08},
+    "donuts_luck": {"name": "Donut's Luck", "description": "Some of Donut's luck rubbed off on you. +8% crit chance.",
+                    "crit_bonus": 0.08},
     "iron_stomach": {"name": "Iron Stomach", "description": "Whatever that was, you're stronger for it. +2 END.",
                       "stat_delta": {"end": 2}},
 }
 
 MONSTERS = {
-    "rat_bot_swarm": {"name": "Rat-Bot Swarm", "hp": 16, "power": 3, "def": 0, "agi": 8,
-                       "xp_reward": 16, "gold_range": [2, 6], "loot_table": [("patchup_potion", 0.35)]},
-    "sewer_jelly": {"name": "Sewer Jelly", "hp": 26, "power": 4, "def": 1, "agi": 2,
-                     "xp_reward": 22, "gold_range": [3, 8],
-                     "loot_table": [("sewer_boots", 0.35), ("patchup_potion", 0.25)]},
-    "plumbing_warden": {"name": "The Plumbing Warden", "hp": 46, "power": 7, "def": 2, "agi": 4,
-                         "xp_reward": 40, "gold_range": [15, 25],
-                         "loot_table": [("frying_pan", 1.0), ("patchup_potion", 0.5)],
-                         "boss": True},
-    "bargain_golem": {"name": "Bargain Golem", "hp": 40, "power": 6, "def": 4, "agi": 2,
-                       "xp_reward": 30, "gold_range": [10, 18],
-                       "loot_table": [("static_charm", 0.35), ("patchup_potion", 0.25)]},
-    "con_artist_sprite": {"name": "Con-Artist Sprite", "hp": 24, "power": 5, "def": 1, "agi": 12,
-                           "xp_reward": 26, "gold_range": [8, 16],
-                           "loot_table": [("patchup_potion", 0.4)], "steals_gold": True},
-    "the_auctioneer": {"name": "The Auctioneer", "hp": 62, "power": 8, "def": 4, "agi": 6,
-                        "xp_reward": 60, "gold_range": [25, 40],
-                        "loot_table": [("auctioneer_gavel", 1.0), ("static_charm", 0.4), ("patchup_potion", 0.5)],
-                        "boss": True},
-    "feedback_wisp": {"name": "Feedback Wisp", "hp": 32, "power": 5, "def": 1, "agi": 9,
-                       "xp_reward": 34, "gold_range": [12, 20],
-                       "loot_table": [("static_charm", 0.35), ("patchup_potion", 0.25)], "drains_mana": True},
-    "rerun_wraith": {"name": "Rerun Wraith", "hp": 36, "power": 6, "def": 2, "agi": 5,
-                      "xp_reward": 36, "gold_range": [12, 22], "loot_table": [("patchup_potion", 0.4)]},
-    "the_producer": {"name": "The Producer", "hp": 85, "power": 9, "def": 5, "agi": 7,
-                      "xp_reward": 120, "gold_range": [50, 80],
-                      "loot_table": [("patchup_potion", 0.6), ("static_charm", 0.5)], "boss": True,
-                      "final_boss": True},
+    # Floor 1 -- The Tutorial
+    "goblin": {"name": "Goblin", "hp": 18, "power": 4, "def": 1, "agi": 6,
+               "xp_reward": 18, "gold_range": [3, 8], "loot_table": [("crawler_ration", 0.25)]},
+    "murder_dozer": {"name": "Murder Dozer", "hp": 24, "power": 5, "def": 2, "agi": 3,
+                      "xp_reward": 22, "gold_range": [4, 10], "loot_table": [("crawler_ration", 0.2)]},
+    "bad_llama": {"name": "Bad Llama", "hp": 20, "power": 4, "def": 0, "agi": 9,
+                  "xp_reward": 20, "gold_range": [3, 9], "loot_table": [("crawler_ration", 0.2)]},
+    "troglodyte": {"name": "Troglodyte", "hp": 26, "power": 5, "def": 2, "agi": 4,
+                   "xp_reward": 24, "gold_range": [5, 10], "loot_table": [("mana_tonic", 0.2)]},
+    "the_hoarder": {"name": "The Hoarder", "hp": 42, "power": 7, "def": 3, "agi": 5,
+                     "xp_reward": 42, "gold_range": [18, 28], "loot_table": [("goblin_pass_tattoo", 0.5)]},
+    "the_juicer": {"name": "The Juicer", "hp": 44, "power": 8, "def": 2, "agi": 6,
+                    "xp_reward": 44, "gold_range": [18, 28], "loot_table": [("crawler_ration", 0.4)]},
+    "ball_of_swine": {"name": "Ball of Swine", "hp": 50, "power": 7, "def": 4, "agi": 3,
+                       "xp_reward": 48, "gold_range": [20, 30], "loot_table": [("mana_tonic", 0.3)]},
+    "goblin_war_chieftain": {"name": "Goblin War Chieftain", "hp": 70, "power": 9, "def": 4, "agi": 5,
+                              "xp_reward": 70, "gold_range": [30, 45],
+                              "loot_table": [("goblin_war_axe", 1.0)], "boss": True},
+
+    # Floor 2 -- Second Floor Sprawl
+    "brindle_grub": {"name": "Brindle Grub", "hp": 30, "power": 5, "def": 1, "agi": 5,
+                      "xp_reward": 30, "gold_range": [8, 14], "loot_table": [("crawler_ration", 0.25)]},
+    "danger_dingo": {"name": "Danger Dingo", "hp": 34, "power": 6, "def": 1, "agi": 10,
+                      "xp_reward": 32, "gold_range": [8, 14], "loot_table": [("crawler_ration", 0.2)]},
+    "mind_horror": {"name": "Mind Horror", "hp": 32, "power": 6, "def": 2, "agi": 6,
+                     "xp_reward": 34, "gold_range": [10, 16], "loot_table": [("mana_tonic", 0.2)]},
+    "feral_clurichaun": {"name": "Feral Clurichaun", "hp": 30, "power": 5, "def": 1, "agi": 8,
+                          "xp_reward": 30, "gold_range": [8, 14],
+                          "loot_table": [("crawler_ration", 0.25)], "steals_gold": True},
+    "laminak": {"name": "Laminak", "hp": 28, "power": 5, "def": 3, "agi": 4,
+                "xp_reward": 30, "gold_range": [8, 14], "loot_table": [("mana_tonic", 0.2)]},
+    "kobold": {"name": "Kobold", "hp": 26, "power": 4, "def": 1, "agi": 7,
+               "xp_reward": 26, "gold_range": [6, 12], "loot_table": [("crawler_ration", 0.2)]},
+    "rage_elemental": {"name": "Rage Elemental", "hp": 78, "power": 11, "def": 3, "agi": 5,
+                        "xp_reward": 85, "gold_range": [35, 50], "loot_table": [("crawler_ration", 0.4)]},
+    "ralph_the_frenzied_gerbil": {"name": "Ralph the Frenzied Gerbil", "hp": 60, "power": 9, "def": 2, "agi": 14,
+                                   "xp_reward": 70, "gold_range": [28, 40],
+                                   "loot_table": [("gorgons_lucky_pebble", 0.5)]},
+    "krakaren_clone": {"name": "Krakaren Clone", "hp": 110, "power": 13, "def": 5, "agi": 5,
+                        "xp_reward": 130, "gold_range": [55, 75],
+                        "loot_table": [("bigboi_boxers_upgraded", 1.0)], "boss": True},
+
+    # Floor 3 -- The Over City
+    "circus_lemur": {"name": "Circus Lemur", "hp": 34, "power": 6, "def": 1, "agi": 12,
+                      "xp_reward": 40, "gold_range": [10, 18], "loot_table": [("crawler_ration", 0.25)]},
+    "giraffe_rider": {"name": "Giraffe Rider", "hp": 40, "power": 7, "def": 2, "agi": 6,
+                       "xp_reward": 44, "gold_range": [12, 20], "loot_table": [("crawler_ration", 0.2)]},
+    "undead_performer": {"name": "Undead Circus Performer", "hp": 38, "power": 7, "def": 3, "agi": 5,
+                          "xp_reward": 42, "gold_range": [10, 18], "loot_table": [("mana_tonic", 0.2)]},
+    "heather_the_bear": {"name": "Heather the Bear", "hp": 95, "power": 12, "def": 4, "agi": 4,
+                          "xp_reward": 110, "gold_range": [40, 60],
+                          "loot_table": [("earth_hobby_potion", 0.4)]},
+    "ringmaster_grimaldi": {"name": "Ringmaster Grimaldi", "hp": 150, "power": 15, "def": 6, "agi": 6,
+                             "xp_reward": 190, "gold_range": [70, 100],
+                             "loot_table": [("bigboi_boxers_supreme", 1.0)], "boss": True},
+
+    # Floor 4 -- The Iron Tangle
+    "drek": {"name": "Drek", "hp": 44, "power": 8, "def": 3, "agi": 6,
+             "xp_reward": 48, "gold_range": [14, 24], "loot_table": [("field_ration_supreme", 0.2)]},
+    "psycho_sticker": {"name": "Psycho Sticker", "hp": 40, "power": 7, "def": 2, "agi": 8,
+                        "xp_reward": 46, "gold_range": [14, 22], "loot_table": [("field_ration_supreme", 0.2)]},
+    "jikininki": {"name": "Jikininki", "hp": 46, "power": 8, "def": 3, "agi": 5,
+                  "xp_reward": 50, "gold_range": [16, 24], "loot_table": [("greater_mana_tonic", 0.2)]},
+    "cave_mudge_bonker": {"name": "Cave Mudge Bonker", "hp": 42, "power": 7, "def": 4, "agi": 4,
+                           "xp_reward": 46, "gold_range": [14, 22], "loot_table": [("field_ration_supreme", 0.2)]},
+    "shock_chomper": {"name": "Shock Chomper", "hp": 44, "power": 8, "def": 2, "agi": 9,
+                       "xp_reward": 48, "gold_range": [15, 24],
+                       "loot_table": [("greater_mana_tonic", 0.2)], "drains_mana": True},
+    "gore_gore": {"name": "Gore-Gore the Mantaur Engineer", "hp": 105, "power": 14, "def": 5, "agi": 5,
+                   "xp_reward": 140, "gold_range": [50, 70],
+                   "loot_table": [("dungeon_anarchists_cookbook", 0.5)]},
+    "regenerating_gnoll": {"name": "The Regenerating Gnoll", "hp": 90, "power": 12, "def": 4, "agi": 6,
+                            "xp_reward": 120, "gold_range": [45, 65],
+                            "loot_table": [("field_ration_supreme", 0.4)]},
+    "krakaren_clone_lesser": {"name": "Krakaren Clone", "hp": 100, "power": 13, "def": 5, "agi": 5,
+                               "xp_reward": 125, "gold_range": [45, 65],
+                               "loot_table": [("greater_mana_tonic", 0.4)]},
+    "the_demon_mother": {"name": "The Demon Mother", "hp": 200, "power": 17, "def": 7, "agi": 6,
+                          "xp_reward": 260, "gold_range": [90, 130],
+                          "loot_table": [("demon_engine_piston", 1.0)], "boss": True},
+
+    # Floor 5 -- The Bubbles
+    "dromedarian": {"name": "Dromedarian", "hp": 50, "power": 9, "def": 3, "agi": 6,
+                     "xp_reward": 60, "gold_range": [18, 28], "loot_table": [("field_ration_supreme", 0.2)]},
+    "bactrian": {"name": "Bactrian", "hp": 54, "power": 9, "def": 4, "agi": 5,
+                 "xp_reward": 62, "gold_range": [18, 28], "loot_table": [("field_ration_supreme", 0.2)]},
+    "dirigible_gnome": {"name": "Dirigible Gnome", "hp": 46, "power": 8, "def": 2, "agi": 10,
+                         "xp_reward": 58, "gold_range": [16, 26], "loot_table": [("greater_mana_tonic", 0.2)]},
+    "changeling": {"name": "Changeling", "hp": 48, "power": 9, "def": 3, "agi": 8,
+                   "xp_reward": 60, "gold_range": [18, 28], "loot_table": [("greater_mana_tonic", 0.2)]},
+    "denise_goose_mother": {"name": "Denise the Feral Goose Mother", "hp": 110, "power": 15, "def": 5, "agi": 6,
+                             "xp_reward": 150, "gold_range": [55, 80],
+                             "loot_table": [("field_ration_supreme", 0.4)]},
+    "giant_sand_ooze": {"name": "Giant Sand Ooze", "hp": 120, "power": 14, "def": 6, "agi": 3,
+                         "xp_reward": 155, "gold_range": [55, 80],
+                         "loot_table": [("greater_mana_tonic", 0.4)]},
+    "orthrus": {"name": "Orthrus", "hp": 160, "power": 18, "def": 6, "agi": 7,
+                "xp_reward": 210, "gold_range": [75, 100],
+                "loot_table": [("rockards_ring_of_sniping", 0.5)]},
+    "emberus": {"name": "Emberus", "hp": 165, "power": 19, "def": 5, "agi": 6,
+                "xp_reward": 220, "gold_range": [80, 105],
+                "loot_table": [("field_ration_supreme", 0.5)]},
+    "lusca": {"name": "Lusca", "hp": 260, "power": 20, "def": 8, "agi": 6,
+              "xp_reward": 320, "gold_range": [110, 150],
+              "loot_table": [("krakenbone_harpoon", 1.0)], "boss": True},
+
+    # Floor 6 -- The Hunting Grounds
+    "hunter": {"name": "Hunter", "hp": 60, "power": 11, "def": 4, "agi": 9,
+               "xp_reward": 80, "gold_range": [25, 40], "loot_table": [("field_ration_supreme", 0.25)]},
+    "dinosaur": {"name": "Dinosaur", "hp": 70, "power": 13, "def": 3, "agi": 6,
+                 "xp_reward": 85, "gold_range": [25, 40], "loot_table": [("field_ration_supreme", 0.2)]},
+    "odious_creeper": {"name": "Odious Creeper", "hp": 56, "power": 10, "def": 3, "agi": 7,
+                        "xp_reward": 75, "gold_range": [22, 36], "loot_table": [("greater_mana_tonic", 0.2)]},
+    "shambling_berserker": {"name": "Shambling Berserker", "hp": 64, "power": 12, "def": 2, "agi": 5,
+                             "xp_reward": 80, "gold_range": [24, 38], "loot_table": [("greater_mana_tonic", 0.2)]},
+    "vrah_the_lead_hunter": {"name": "Vrah, the Lead Hunter", "hp": 180, "power": 20, "def": 6, "agi": 10,
+                              "xp_reward": 240, "gold_range": [90, 120],
+                              "loot_table": [("shrink_wand", 0.5)]},
+    "queen_imogen": {"name": "Queen Imogen", "hp": 340, "power": 24, "def": 9, "agi": 7,
+                      "xp_reward": 450, "gold_range": [150, 200],
+                      "loot_table": [("imogens_scepter", 1.0)], "boss": True, "final_boss": True},
 }
 
+TRAPS = {
+    "rot_sticker_trap": {"name": "Rot Sticker Trap", "hp_loss": [6, 12]},
+    "suspicious_wall_rune": {"name": "Suspicious Wall Rune", "hp_loss": [8, 15]},
+    "pestiferous_vine_snare": {"name": "Pestiferous Vine Snare", "hp_loss": [10, 18]},
+    "runaway_handcart": {"name": "Runaway Handcart", "hp_loss": [12, 20]},
+    "collapsing_bubble_seal": {"name": "Collapsing Bubble Seal", "hp_loss": [14, 22]},
+    "poachers_snare": {"name": "Poacher's Snare", "gold_loss": [15, 30]},
+}
+
+RESTS = {
+    "tutorial_safe_room": {"name": "Tutorial Safe Room", "heal_pct": [0.2, 0.3]},
+    "meadow_lark_alcove": {"name": "Meadow Lark Alcove", "heal_pct": [0.2, 0.3]},
+    "npc_diner": {"name": "NPC Diner", "heal_pct": [0.2, 0.3]},
+    "parked_rail_car": {"name": "Parked Rail Car", "heal_pct": [0.2, 0.3]},
+    "bubble_airlock_lounge": {"name": "Bubble Airlock Lounge", "heal_pct": [0.2, 0.3]},
+    "abandoned_hunting_blind": {"name": "Abandoned Hunting Blind", "heal_pct": [0.2, 0.3]},
+}
+
+TREASURES = {
+    "ring_cache": {"name": "Ring Cache", "gold_range": [8, 15],
+                   "loot_table": [("goblin_pass_tattoo", 0.4)]},
+    "scratch_card_cache": {"name": "Scratch Card Cache", "gold_range": [15, 30],
+                            "loot_table": [("gorgons_lucky_pebble", 0.35)]},
+    "boxers_upgrade_cache": {"name": "Boxers Upgrade Cache", "gold_range": [18, 32],
+                              "loot_table": [("bigboi_boxers_supreme", 0.5)]},
+    "cookbook_cache": {"name": "Cookbook Cache", "gold_range": [20, 35],
+                        "loot_table": [("dungeon_anarchists_cookbook", 0.4)]},
+    "quadrant_supply_cache": {"name": "Quadrant Supply Cache", "gold_range": [25, 40],
+                               "loot_table": [("rockards_ring_of_sniping", 0.35)]},
+    "battle_rattle_cache": {"name": "Battle Rattle Patch Cache", "gold_range": [30, 50],
+                             "loot_table": [("shrink_wand", 0.4)]},
+}
+
+ROOM_WEIGHTS = {"fight": 4, "elite": 1, "trap": 1.5, "rest": 1, "treasure": 1.5}
+ORDINAL_LABELS = ["The First Passage", "The Second Passage", "The Third Passage"]
+
 FLOORS = [
-    {"theme": "The Neon Sewer Arena", "encounters": ["rat_bot_swarm", "sewer_jelly"],
-     "boss": "plumbing_warden", "shop": ["frying_pan", "sewer_boots", "patchup_potion", "mana_tonic"]},
-    {"theme": "The Gilded Arena", "encounters": ["bargain_golem", "con_artist_sprite"],
-     "boss": "the_auctioneer", "shop": ["static_charm", "patchup_potion", "mana_tonic"]},
-    {"theme": "The Static Wastes", "encounters": ["feedback_wisp", "rerun_wraith"],
-     "boss": "the_producer", "shop": ["patchup_potion", "static_charm", "mana_tonic"]},
+    {
+        "theme": "The Tutorial",
+        "monster_pool": ["goblin", "murder_dozer", "bad_llama", "troglodyte"],
+        "elite_pool": ["the_hoarder", "the_juicer", "ball_of_swine"],
+        "boss": "goblin_war_chieftain",
+        "trap_pool": ["rot_sticker_trap"], "rest_pool": ["tutorial_safe_room"],
+        "treasure_pool": ["ring_cache"],
+        "path_hints": {
+            "fight": ["You hear scratching and cackling from a side tunnel."],
+            "elite": ["A larger shadow moves behind the rubble - something big is guarding this stretch."],
+            "trap": ["Sticky notes are plastered on the walls ahead. They're humming faintly."],
+            "rest": ["A door marked with a crawler's chalk sigil - someone's guild outpost."],
+            "treasure": ["A glint of something shiny wedged in the collapsed section."],
+        },
+        "shop": ["crawler_ration", "mana_tonic", "goblin_pass_tattoo"],
+    },
+    {
+        "theme": "Second Floor Sprawl",
+        "monster_pool": ["brindle_grub", "danger_dingo", "mind_horror", "feral_clurichaun", "laminak", "kobold"],
+        "elite_pool": ["rage_elemental", "ralph_the_frenzied_gerbil"],
+        "boss": "krakaren_clone",
+        "trap_pool": ["suspicious_wall_rune"], "rest_pool": ["meadow_lark_alcove"],
+        "treasure_pool": ["scratch_card_cache"],
+        "path_hints": {
+            "fight": ["Something skitters just past the edge of your light."],
+            "elite": ["The ground itself seems to be breathing nearby."],
+            "trap": ["Fresh graffiti on the wall, still dripping."],
+            "rest": ["A quiet balcony overlooking the sprawl below."],
+            "treasure": ["A torn scratch-card lottery booth, unlooted so far."],
+        },
+        "shop": ["crawler_ration", "mana_tonic", "gorgons_lucky_pebble"],
+    },
+    {
+        "theme": "The Over City",
+        "monster_pool": ["circus_lemur", "giraffe_rider", "undead_performer"],
+        "elite_pool": ["heather_the_bear"],
+        "boss": "ringmaster_grimaldi",
+        "trap_pool": ["pestiferous_vine_snare"], "rest_pool": ["npc_diner"],
+        "treasure_pool": ["boxers_upgrade_cache"],
+        "path_hints": {
+            "fight": ["Circus music drifts from around the corner, off-key and wrong."],
+            "elite": ["A tent flap billows - something large is pacing inside."],
+            "trap": ["Vines snake across the cobblestones here, twitching."],
+            "rest": ["A diner sign flickers, half its neon letters dead."],
+            "treasure": ["A prize booth, abandoned mid-carnival."],
+        },
+        "shop": ["crawler_ration", "mana_tonic", "earth_hobby_potion"],
+    },
+    {
+        "theme": "The Iron Tangle",
+        "monster_pool": ["drek", "psycho_sticker", "jikininki", "cave_mudge_bonker", "shock_chomper"],
+        "elite_pool": ["gore_gore", "regenerating_gnoll", "krakaren_clone_lesser"],
+        "boss": "the_demon_mother",
+        "trap_pool": ["runaway_handcart"], "rest_pool": ["parked_rail_car"],
+        "treasure_pool": ["cookbook_cache"],
+        "path_hints": {
+            "fight": ["Rails hum with an approaching engine, or something imitating one."],
+            "elite": ["A hulking silhouette works on a stalled train car."],
+            "trap": ["An unmanned handcart rattles somewhere close, gaining speed."],
+            "rest": ["A parked passenger car, doors wedged open, oddly peaceful."],
+            "treasure": ["A conductor's satchel, left behind in the rush."],
+        },
+        "shop": ["field_ration_supreme", "greater_mana_tonic", "dungeon_anarchists_cookbook"],
+    },
+    {
+        "theme": "The Bubbles",
+        "monster_pool": ["dromedarian", "bactrian", "dirigible_gnome", "changeling"],
+        "elite_pool": ["denise_goose_mother", "giant_sand_ooze", "orthrus", "emberus"],
+        "boss": "lusca",
+        "trap_pool": ["collapsing_bubble_seal"], "rest_pool": ["bubble_airlock_lounge"],
+        "treasure_pool": ["quadrant_supply_cache"],
+        "path_hints": {
+            "fight": ["Something large moves beyond the dome's curved wall."],
+            "elite": ["A shadow far too big for anything friendly circles overhead."],
+            "trap": ["The bubble's seal groans under the water pressure."],
+            "rest": ["An airlock lounge, quiet and dry, oddly untouched."],
+            "treasure": ["A supply crate wedged against the quadrant wall."],
+        },
+        "shop": ["field_ration_supreme", "greater_mana_tonic", "rockards_ring_of_sniping"],
+    },
+    {
+        "theme": "The Hunting Grounds",
+        "monster_pool": ["hunter", "dinosaur", "odious_creeper", "shambling_berserker"],
+        "elite_pool": ["vrah_the_lead_hunter"],
+        "boss": "queen_imogen",
+        "trap_pool": ["poachers_snare"], "rest_pool": ["abandoned_hunting_blind"],
+        "treasure_pool": ["battle_rattle_cache"],
+        "path_hints": {
+            "fight": ["Underbrush rustles - hunted or hunter, hard to say yet."],
+            "elite": ["A trophy rack nearby suggests this hunter is very good at their job."],
+            "trap": ["A snare line, near-invisible, strung low across the path."],
+            "rest": ["An abandoned blind, camouflage netting still intact."],
+            "treasure": ["A cache someone buried in a hurry and never came back for."],
+        },
+        "shop": ["field_ration_supreme", "greater_mana_tonic", "shrink_wand"],
+    },
 ]
 
-SHOP_PRICES = {"frying_pan": 30, "sewer_boots": 20, "patchup_potion": 12, "static_charm": 40, "mana_tonic": 15}
+SHOP_PRICES = {
+    "crawler_ration": 15, "mana_tonic": 15, "goblin_pass_tattoo": 40,
+    "gorgons_lucky_pebble": 55, "earth_hobby_potion": 30,
+    "field_ration_supreme": 35, "greater_mana_tonic": 35,
+    "dungeon_anarchists_cookbook": 70, "rockards_ring_of_sniping": 90, "shrink_wand": 110,
+}
 
 CATALOG = {
     "items": {iid: {"name": d["name"], "type": d["type"], "description": d.get("description", "")}
@@ -127,17 +379,21 @@ CATALOG = {
     "monsters": {mid: {"name": d["name"]} for mid, d in MONSTERS.items()},
 }
 
-SYSTEM_PROMPT = """You are the narration voice for THE PROGRAM, a reality-TV game show broadcast from \
-inside a monster-infested dungeon. You never decide what happens - a separate system already resolved \
-the numbers. Your only job is to narrate, in character, what the given EVENT(S) mean.
+SYSTEM_PROMPT = """You are the narration voice for THE DUNGEON CRAWLER CARL SHOW, a reality-TV \
+broadcast beamed across the galaxy from inside an alien-run dungeon. You never decide what happens - a \
+separate system already resolved the numbers. Your only job is to narrate, in character, what the given \
+EVENT(S) mean.
 
 Always respond in exactly this format, one line per voice, nothing else:
-ANNOUNCER: <1-3 punchy, snarky, game-show-host sentences reacting to the event(s). Call the player \
-"Contestant." Refer to the dungeon as "the Program" or "the Descent." Dark humor is fine; over-the-top \
-show-biz energy is the goal. You may use at most one bracketed sound cue like [AIR HORN] or [CROWD GASPS].
-CAT: <0-1 short, dry, self-serving sentence from the Contestant's cat companion - only include this line \
-if the cat would plausibly react. Omit it entirely otherwise. When the event list includes a \
-"cat_assist" entry, the cat actually helped in the fight - narrate that as a real action, not just banter.
+ANNOUNCER: <1-3 punchy, snarky, over-the-top game-show-host sentences reacting to the event(s). Call \
+the player "Carl" or "Crawler." Refer to the dungeon as "the dungeon," "the Crawl," or "the Show." Dark \
+humor is fine; huge show-biz energy is the goal. You may use at most one bracketed sound cue like \
+[AIR HORN] or [CROWD GASPS].
+CAT: <0-1 short sentence from Donut, Carl's cat, who is haughty, food-and-attention-obsessed, refers to \
+herself in the third person or as "Princess Donut," and is quietly a real combat asset despite the \
+attitude - only include this line if she'd plausibly react, omit it otherwise. When the event list \
+includes a "cat_assist" entry, Donut actually helped in the fight - narrate that as a real action, not \
+just banter.
 
 Hard rules:
 - Never state, imply, or invent any number (damage, HP, gold, XP, chance) that is not already present in \
@@ -147,11 +403,11 @@ the EVENT(S) or STATE given to you.
 - Never break the ANNOUNCER:/CAT: line format, and never add any other lines or headers.
 """
 
-OPENING_LINE = ("Ladies, gentlemen, and things that used to be either: welcome back to THE PROGRAM! "
-                "Our next Contestant stumbles in wearing nothing but boxers and a bad attitude, flanked "
-                "by one deeply unimpressed cat. Let's see how far boxers-and-bravado gets him. Floor One... GO!")
+OPENING_LINE = ("Ladies, gentlemen, and things that used to be either: welcome back to THE DUNGEON "
+                "CRAWLER CARL SHOW! Our next Crawler stumbles in wearing nothing but his Enchanted "
+                "BigBoi Boxers and a bad attitude, flanked by one deeply unimpressed cat who insists on "
+                "being called Princess Donut. Let's see how far boxers-and-bravado gets him. Floor One... GO!")
 
-STAGE_ORDER = ["encounter_1", "encounter_2", "boss", "reward"]
 CAT_ASSIST_CHANCE = 0.35
 
 
@@ -220,27 +476,30 @@ def new_game():
     global GAME_STATE
     now = datetime.now(timezone.utc).isoformat()
     GAME_STATE = {
-        "version": 1,
+        "version": 2,
         "created_at": now,
         "updated_at": now,
         "turn_number": 0,
         "status": "in_progress",
         "player": {
-            "name": "The Guy in Boxers",
+            "name": "Carl",
             "level": 1, "xp": 0, "xp_to_next": 25,
             "hp": 40, "hp_max": 40, "mana": 10, "mana_max": 10, "gold": 20,
             "stats": {"str": 5, "agi": 5, "end": 5, "int": 5, "luck": 5},
-            "equipped": {"weapon": "rusty_shiv", "armor": None, "trinket": None},
-            "inventory": [{"id": "patchup_potion", "qty": 3}],
-            "skills": ["basic_attack", "power_slap", "cats_distraction"],
-            "skill_cooldowns": {"power_slap": 0, "cats_distraction": 0},
+            "equipped": {"weapon": "scrap_pipe", "armor": "bigboi_boxers", "trinket": None},
+            "inventory": [{"id": "crawler_ration", "qty": 3}],
+            "skills": ["basic_attack", "powerful_strike", "donuts_diversion"],
+            "skill_cooldowns": {"powerful_strike": 0, "donuts_diversion": 0},
             "curses": [],
             "boons": [],
         },
-        "dungeon": {"floor": 1, "floor_theme": FLOORS[0]["theme"], "stage": "encounter_1", "whim_used": False},
+        "dungeon": {"floor": 1, "floor_theme": FLOORS[0]["theme"], "stage": "path_select",
+                    "room_index": 0, "rooms_required": random.randint(3, 4),
+                    "pending_paths": [], "whim_used": False},
         "combat": None,
         "narration_log": [{"turn": 0, "speaker": "announcer", "text": OPENING_LINE}],
     }
+    generate_path_options(GAME_STATE)
     save_state()
 
 
@@ -258,7 +517,8 @@ def load_or_init():
         try:
             with SAVE_PATH.open() as f:
                 loaded = json.load(f)
-            if "player" in loaded and "dungeon" in loaded and "narration_log" in loaded:
+            if (loaded.get("version") == 2 and "player" in loaded
+                    and "dungeon" in loaded and "narration_log" in loaded):
                 GAME_STATE = loaded
                 return
         except (json.JSONDecodeError, KeyError):
@@ -299,17 +559,40 @@ def check_level_up(player, events):
                 events.append({"type": "skill_unlocked", "skill": sdef["name"]})
 
 
-def advance_stage(state, events):
+def generate_path_options(state, events=None):
     dungeon = state["dungeon"]
-    idx = STAGE_ORDER.index(dungeon["stage"])
-    dungeon["stage"] = STAGE_ORDER[idx + 1]
-    if dungeon["stage"] == "reward":
-        dungeon["whim_used"] = False
-    events.append({"type": "stage_change", "stage": dungeon["stage"]})
+    floor = FLOORS[dungeon["floor"] - 1]
+    room_types = list(ROOM_WEIGHTS.keys())
+    weights = [ROOM_WEIGHTS[t] for t in room_types]
+    n = random.choice([2, 3])
+    chosen = random.choices(room_types, weights=weights, k=n)
+    for _ in range(5):
+        if len(set(chosen)) > 1:
+            break
+        chosen = random.choices(room_types, weights=weights, k=n)
+    options = []
+    for i, room_type in enumerate(chosen):
+        hint = random.choice(floor["path_hints"][room_type])
+        options.append({"room_type": room_type, "label": ORDINAL_LABELS[i], "hint": hint})
+    dungeon["pending_paths"] = options
+    if events is not None:
+        events.append({"type": "path_options", "options": [{"hint": o["hint"]} for o in options]})
+
+
+def advance_room(state, events):
+    dungeon = state["dungeon"]
+    dungeon["room_index"] += 1
+    if dungeon["room_index"] >= dungeon["rooms_required"]:
+        dungeon["stage"] = "boss"
+        events.append({"type": "stage_change", "stage": "boss"})
+    else:
+        dungeon["stage"] = "path_select"
+        generate_path_options(state, events)
 
 
 def handle_monster_death(state, events):
     player = state["player"]
+    dungeon = state["dungeon"]
     combat = state["combat"]
     monster = MONSTERS[combat["monster_id"]]
     xp = round(monster["xp_reward"] * get_xp_mult(player))
@@ -324,7 +607,75 @@ def handle_monster_death(state, events):
                     "xp_gained": xp, "gold_gained": gold, "loot": loot_names})
     check_level_up(player, events)
     state["combat"] = None
-    advance_stage(state, events)
+    if monster.get("boss"):
+        dungeon["stage"] = "reward"
+        dungeon["whim_used"] = False
+        events.append({"type": "stage_change", "stage": "reward"})
+    else:
+        advance_room(state, events)
+
+
+def handle_choose_path(state, payload, events):
+    dungeon = state["dungeon"]
+    if dungeon["stage"] != "path_select" or state["combat"] is not None:
+        events.append({"type": "action_failed", "reason": "no path to choose"})
+        return
+    idx = payload.get("option_index")
+    paths = dungeon.get("pending_paths", [])
+    if not isinstance(idx, int) or idx < 0 or idx >= len(paths):
+        events.append({"type": "action_failed", "reason": "invalid path"})
+        return
+    option = paths[idx]
+    dungeon["pending_paths"] = []
+    floor = FLOORS[dungeon["floor"] - 1]
+    room_type = option["room_type"]
+
+    if room_type in ("fight", "elite"):
+        pool = floor["monster_pool"] if room_type == "fight" else floor["elite_pool"]
+        monster_id = random.choice(pool)
+        m = MONSTERS[monster_id]
+        state["combat"] = {"active": True, "monster_id": monster_id, "monster_hp": m["hp"],
+                            "monster_hp_max": m["hp"], "round": 1,
+                            "phase_2_triggered": False}
+        events.append({"type": "encounter_start", "monster_name": m["name"],
+                        "boss": False, "elite": room_type == "elite"})
+    elif room_type == "trap":
+        trap = TRAPS[random.choice(floor["trap_pool"])]
+        ev = {"type": "trap_triggered", "trap_name": trap["name"]}
+        if "hp_loss" in trap:
+            loss = random.randint(*trap["hp_loss"])
+            state["player"]["hp"] = max(0, state["player"]["hp"] - loss)
+            ev["hp_lost"] = loss
+        if "gold_loss" in trap:
+            loss = min(state["player"]["gold"], random.randint(*trap["gold_loss"]))
+            state["player"]["gold"] -= loss
+            ev["gold_lost"] = loss
+        events.append(ev)
+        if state["player"]["hp"] <= 0:
+            state["status"] = "defeat"
+            events.append({"type": "defeat"})
+            return
+        advance_room(state, events)
+    elif room_type == "rest":
+        rest = RESTS[random.choice(floor["rest_pool"])]
+        player = state["player"]
+        missing = player["hp_max"] - player["hp"]
+        heal = round(missing * random.uniform(*rest["heal_pct"]))
+        player["hp"] = min(player["hp_max"], player["hp"] + heal)
+        events.append({"type": "rest_stop", "rest_name": rest["name"], "heal": heal})
+        advance_room(state, events)
+    elif room_type == "treasure":
+        treasure = TREASURES[random.choice(floor["treasure_pool"])]
+        player = state["player"]
+        gold = random.randint(*treasure["gold_range"])
+        player["gold"] += gold
+        loot_names = []
+        for item_id, chance in treasure.get("loot_table", []):
+            if random.random() < chance:
+                loot_names.append(grant_item(player, item_id))
+        events.append({"type": "treasure_found", "treasure_name": treasure["name"],
+                        "gold": gold, "loot": loot_names})
+        advance_room(state, events)
 
 
 def run_monster_turn(state, events):
@@ -341,10 +692,13 @@ def run_monster_turn(state, events):
             handle_monster_death(state, events)
             return
 
-    hit_penalty = combat.pop("monster_hit_penalty", 0.0)
+    if combat.pop("monster_stunned", False):
+        events.append({"type": "monster_distracted", "monster_name": monster["name"]})
+        combat["round"] += 1
+        return
+
     result = resolve_hit(monster["power"], 0, monster["agi"], 0,
-                          get_armor_def(player), player["stats"]["agi"],
-                          hit_chance_penalty=hit_penalty)
+                          get_armor_def(player), player["stats"]["agi"])
     ev = {"type": "monster_attack", "monster_name": monster["name"],
           "hit": result["hit"], "damage": result["damage"], "crit": result["crit"]}
     if result["hit"]:
@@ -366,21 +720,16 @@ def run_monster_turn(state, events):
 
 def handle_explore(state, events):
     dungeon = state["dungeon"]
-    if state["combat"] is not None or dungeon["stage"] not in ("encounter_1", "encounter_2", "boss"):
+    if state["combat"] is not None or dungeon["stage"] != "boss":
         events.append({"type": "action_failed", "reason": "nothing to explore right now"})
         return
     floor = FLOORS[dungeon["floor"] - 1]
-    if dungeon["stage"] == "encounter_1":
-        monster_id = floor["encounters"][0]
-    elif dungeon["stage"] == "encounter_2":
-        monster_id = floor["encounters"][1]
-    else:
-        monster_id = floor["boss"]
+    monster_id = floor["boss"]
     m = MONSTERS[monster_id]
     state["combat"] = {"active": True, "monster_id": monster_id, "monster_hp": m["hp"],
-                        "monster_hp_max": m["hp"], "round": 1, "monster_hit_penalty": 0.0,
+                        "monster_hp_max": m["hp"], "round": 1,
                         "phase_2_triggered": False}
-    events.append({"type": "encounter_start", "monster_name": m["name"], "boss": m.get("boss", False)})
+    events.append({"type": "encounter_start", "monster_name": m["name"], "boss": True})
 
 
 def handle_combat_action(state, action_type, payload, events):
@@ -407,17 +756,19 @@ def handle_combat_action(state, action_type, payload, events):
     monster_defeated = False
     buff_mult = combat.pop("player_buff_mult", 1.0)
 
-    if skill_id == "cats_distraction":
-        combat["monster_hit_penalty"] = 0.25
-        events.append({"type": "skill_used", "skill": skill["name"]})
-    elif skill_id == "adrenaline_surge":
+    if skill_id == "donuts_diversion":
+        heal = skill.get("heal", 0)
+        player["hp"] = min(player["hp_max"], player["hp"] + heal)
+        combat["monster_stunned"] = True
+        events.append({"type": "skill_used", "skill": skill["name"], "heal": heal})
+    elif skill_id == "protective_shell":
         heal = skill["heal"]
         player["hp"] = min(player["hp_max"], player["hp"] + heal)
         combat["player_buff_mult"] = 1.3
         events.append({"type": "skill_used", "skill": skill["name"], "heal": heal})
     else:
         item_consumed = None
-        if skill_id == "improvised_throw":
+        if skill_id == "bomb_toss":
             item_id = payload.get("item_id")
             entry = next((e for e in player["inventory"] if e["id"] == item_id), None)
             if not entry:
@@ -428,8 +779,11 @@ def handle_combat_action(state, action_type, payload, events):
                 player["inventory"].remove(entry)
             item_consumed = ITEMS[item_id]["name"]
         dmg_mult = skill.get("damage_mult", 1.0) * buff_mult
+        if skill_id == "smush" and combat["monster_hp"] <= combat["monster_hp_max"] * 0.3:
+            dmg_mult *= 1.5
+        effective_def = monster["def"] * (1 - skill.get("def_pierce", 0.0))
         result = resolve_hit(get_weapon_power(player), player["stats"]["str"], player["stats"]["agi"],
-                              player["stats"]["luck"], monster["def"], monster["agi"],
+                              player["stats"]["luck"], effective_def, monster["agi"],
                               dmg_mult=dmg_mult, crit_bonus=get_crit_bonus(player))
         ev = {"type": "player_attack", "skill": skill["name"], "hit": result["hit"],
               "damage": result["damage"], "crit": result["crit"]}
@@ -525,7 +879,7 @@ def handle_shop_leave(state, events):
     if dungeon["stage"] != "reward":
         events.append({"type": "action_failed", "reason": "no shop open"})
         return
-    if dungeon["floor"] >= 3:
+    if dungeon["floor"] >= 6:
         state["status"] = "victory"
         events.append({"type": "victory"})
         return
@@ -535,8 +889,11 @@ def handle_shop_leave(state, events):
             player["gold"] = max(0, player["gold"] + delta)
     dungeon["floor"] += 1
     dungeon["floor_theme"] = FLOORS[dungeon["floor"] - 1]["theme"]
-    dungeon["stage"] = "encounter_1"
+    dungeon["room_index"] = 0
+    dungeon["rooms_required"] = random.randint(3, 4)
+    dungeon["stage"] = "path_select"
     events.append({"type": "floor_advance", "floor": dungeon["floor"], "theme": dungeon["floor_theme"]})
+    generate_path_options(state, events)
 
 
 def compute_choices(state):
@@ -556,9 +913,14 @@ def compute_choices(state):
                 continue
             if player["mana"] < skill.get("mana_cost", 0):
                 continue
-            if skill_id == "improvised_throw" and not player["inventory"]:
+            if skill_id == "bomb_toss" and not player["inventory"]:
                 continue
             choices.append(f"skill:{skill_id}")
+    elif dungeon["stage"] == "path_select":
+        for i in range(len(dungeon.get("pending_paths", []))):
+            choices.append(f"choose_path:{i}")
+    elif dungeon["stage"] == "boss":
+        choices.append("explore")
     elif dungeon["stage"] == "reward":
         floor = FLOORS[dungeon["floor"] - 1]
         for item_id in floor["shop"]:
@@ -567,8 +929,6 @@ def compute_choices(state):
         if not dungeon.get("whim_used"):
             choices.append("shop_whim")
         choices.append("shop_leave")
-    else:
-        choices.append("explore")
     for entry in player["inventory"]:
         if entry["qty"] > 0 and ITEMS[entry["id"]]["type"] == "consumable":
             choices.append(f"use_item:{entry['id']}")
@@ -665,6 +1025,8 @@ def action(req: ActionRequest):
         events = []
         if req.type == "explore":
             handle_explore(state, events)
+        elif req.type == "choose_path":
+            handle_choose_path(state, req.payload, events)
         elif req.type in ("attack", "skill"):
             if not state["combat"] or not state["combat"].get("active"):
                 events.append({"type": "action_failed", "reason": "not in combat"})
@@ -887,6 +1249,7 @@ HTML_TEMPLATE = """
     if (parts[0] === "skill") return CATALOG.skills[parts[1]].name;
     if (parts[0] === "use_item") return "Use " + CATALOG.items[parts[1]].name;
     if (parts[0] === "shop_buy") return "Buy " + CATALOG.items[parts[1]].name + " (" + SHOP_PRICES[parts[1]] + "g)";
+    if (parts[0] === "choose_path") return lastData.dungeon.pending_paths[parseInt(parts[1])].label;
     return choice;
   }
 
@@ -896,6 +1259,7 @@ HTML_TEMPLATE = """
     if (parts[0] === "skill") return (CATALOG.skills[parts[1]] || {}).description || "";
     if (parts[0] === "use_item") return (CATALOG.items[parts[1]] || {}).description || "";
     if (parts[0] === "shop_buy") return (CATALOG.items[parts[1]] || {}).description || "";
+    if (parts[0] === "choose_path") return lastData.dungeon.pending_paths[parseInt(parts[1])].hint;
     return "";
   }
 
@@ -975,8 +1339,9 @@ HTML_TEMPLATE = """
     });
 
     document.getElementById("floorBanner").textContent =
-      "FLOOR " + data.dungeon.floor + " of 3 \\u2014 " + data.dungeon.floor_theme +
-      (data.dungeon.stage === "boss" && !data.combat ? " \\u2014 BOSS AHEAD" : "");
+      "FLOOR " + data.dungeon.floor + " of 6 \\u2014 " + data.dungeon.floor_theme +
+      (data.dungeon.stage === "boss" && !data.combat ? " \\u2014 BOSS AHEAD" :
+       data.dungeon.stage === "path_select" ? " \\u2014 Room " + (data.dungeon.room_index + 1) + "/" + data.dungeon.rooms_required : "");
 
     const combatBox = document.getElementById("combatBox");
     if (data.combat) {
@@ -1015,7 +1380,7 @@ HTML_TEMPLATE = """
     if (data.status === "victory" || data.status === "defeat") {
       overlay.style.display = "flex";
       document.getElementById("overlayText").textContent =
-        data.status === "victory" ? "YOU SURVIVED THE PROGRAM!" : "THE PROGRAM THANKS YOU FOR YOUR SERVICE.";
+        data.status === "victory" ? "YOU SURVIVED THE CRAWL!" : "THE SHOW REGRETS TO INFORM YOU: YOU DIED.";
     } else {
       overlay.style.display = "none";
     }
@@ -1049,6 +1414,9 @@ HTML_TEMPLATE = """
       } else if (parts[0] === "shop_buy") {
         type = "shop_buy";
         payload = { item_id: parts[1] };
+      } else if (parts[0] === "choose_path") {
+        type = "choose_path";
+        payload = { option_index: parseInt(parts[1]) };
       }
     }
     sendAction(type, payload);
@@ -1064,7 +1432,7 @@ HTML_TEMPLATE = """
   });
 
   function startNewGame() {
-    if (!confirm("Start a new Descent? This wipes your current run.")) return;
+    if (!confirm("Start a new Crawl? This wipes your current run.")) return;
     fetch("new_game", { method: "POST" })
       .then(function (r) { return r.json(); })
       .then(render);
