@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>THE PROGRAM — An AI-Narrated Dungeon Crawler</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0b0c10;
+    --panel: #14161d;
+    --panel-edge: #2a2e3a;
+    --ink: #e8e8f0;
+    --ink-soft: #9a9db0;
+    --neon-pink: #ff3d81;
+    --neon-cyan: #35e6d6;
+    --neon-gold: #ffcf4d;
+    --danger: #ff5b5b;
+    --good: #4ddc8a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: "IBM Plex Mono", monospace; line-height: 1.5;
+  }
+  h1, h2, h3 { font-family: "Bebas Neue", sans-serif; letter-spacing: 0.04em; margin: 0 0 8px; }
+  a { color: var(--neon-cyan); }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 32px 20px 60px; }
+
+  header { text-align: center; padding: 40px 0 20px; }
+  .eyebrow {
+    font-size: 0.72rem; letter-spacing: 0.3em; color: var(--neon-cyan); text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  header h1 {
+    font-size: clamp(2.4rem, 7vw, 4.2rem); color: var(--neon-pink);
+    text-shadow: 0 0 18px rgba(255,61,129,0.45);
+  }
+  .tagline { color: var(--ink-soft); font-size: 1.05rem; max-width: 46ch; margin: 10px auto 0; }
+
+  .cta-row { display: flex; gap: 12px; justify-content: center; margin-top: 26px; flex-wrap: wrap; }
+  .btn {
+    display: inline-block; padding: 12px 22px; border-radius: 6px; text-decoration: none;
+    font-family: "IBM Plex Mono", monospace; font-size: 0.9rem; font-weight: 600;
+    border: 1px solid var(--panel-edge); transition: all 0.15s ease;
+  }
+  .btn.primary { background: var(--neon-pink); color: #2a0714; border-color: var(--neon-pink); }
+  .btn.primary:hover { background: #ff5c96; }
+  .btn.secondary { color: var(--neon-cyan); border-color: var(--neon-cyan); }
+  .btn.secondary:hover { background: rgba(53,230,214,0.1); }
+
+  .hero-panel {
+    margin: 40px auto 0; max-width: 420px; background: var(--panel); border: 1px solid var(--panel-edge);
+    border-radius: 10px; padding: 18px; box-shadow: 0 0 40px rgba(255,61,129,0.08);
+  }
+  .hero-panel .name { color: var(--neon-gold); font-family: "Bebas Neue", sans-serif; font-size: 1.2rem; }
+  .bar-row { margin: 10px 0; }
+  .bar-label { display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--ink-soft); margin-bottom: 3px; }
+  .bar-outer { background: #1e2129; border-radius: 6px; height: 9px; overflow: hidden; }
+  .bar-inner { height: 100%; border-radius: 6px; }
+  .bar-inner.xp { width: 40%; background: var(--neon-gold); }
+  .bar-inner.hp { width: 82%; background: var(--danger); }
+  .bar-inner.mana { width: 55%; background: var(--neon-cyan); }
+  .stat-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin: 14px 0; }
+  .stat { background: #1e2129; border-radius: 4px; padding: 6px 2px; text-align: center; }
+  .stat-key { display: block; font-size: 0.6rem; color: var(--ink-soft); }
+  .stat-val { display: block; font-size: 1rem; color: var(--neon-cyan); }
+  .mock-log { font-size: 0.78rem; color: var(--ink-soft); border-top: 1px dashed var(--panel-edge); padding-top: 10px; margin-top: 4px; }
+  .mock-log .cat { color: var(--neon-gold); font-style: italic; }
+
+  section { margin-top: 64px; }
+  .section-head { text-align: center; margin-bottom: 28px; }
+  .section-head h2 { font-size: 2rem; color: var(--neon-cyan); }
+  .section-head p { color: var(--ink-soft); max-width: 50ch; margin: 6px auto 0; }
+
+  .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+  .feature {
+    background: var(--panel); border: 1px solid var(--panel-edge); border-radius: 8px; padding: 18px;
+  }
+  .feature h3 { font-size: 1.15rem; color: var(--neon-pink); margin-bottom: 6px; }
+  .feature p { color: var(--ink-soft); font-size: 0.9rem; margin: 0; }
+
+  pre {
+    background: var(--panel); border: 1px solid var(--panel-edge); border-radius: 8px;
+    padding: 18px; overflow-x: auto; font-size: 0.85rem; color: var(--good);
+  }
+  .steps { color: var(--ink-soft); font-size: 0.92rem; }
+  .steps li { margin-bottom: 6px; }
+
+  footer {
+    text-align: center; color: var(--ink-soft); font-size: 0.78rem; margin-top: 70px;
+    border-top: 1px dashed var(--panel-edge); padding-top: 20px;
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="eyebrow">A Text-Based Broadcast From Inside The Descent</div>
+      <h1>THE PROGRAM</h1>
+      <p class="tagline">An AI-narrated dungeon crawler where a snarky game-show announcer calls
+      the fights, your cat won't stop editorializing, and every hit point is decided by real
+      game logic — never by the model.</p>
+      <div class="cta-row">
+        <a class="btn primary" href="https://github.com/firekarrde/DCC">View on GitHub</a>
+        <a class="btn secondary" href="#run-it">How to Run It Locally</a>
+      </div>
+    </header>
+
+    <div class="hero-panel">
+      <div class="name">The Guy in Boxers &mdash; Lv 2</div>
+      <div class="bar-row">
+        <div class="bar-label"><span>XP</span></div>
+        <div class="bar-outer"><div class="bar-inner xp"></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label"><span>HP</span><span>37 / 45</span></div>
+        <div class="bar-outer"><div class="bar-inner hp"></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label"><span>MANA</span><span>7 / 12</span></div>
+        <div class="bar-outer"><div class="bar-inner mana"></div></div>
+      </div>
+      <div class="stat-grid">
+        <div class="stat"><span class="stat-key">STR</span><span class="stat-val">7</span></div>
+        <div class="stat"><span class="stat-key">AGI</span><span class="stat-val">5</span></div>
+        <div class="stat"><span class="stat-key">END</span><span class="stat-val">7</span></div>
+        <div class="stat"><span class="stat-key">INT</span><span class="stat-val">5</span></div>
+        <div class="stat"><span class="stat-key">LUCK</span><span class="stat-val">5</span></div>
+      </div>
+      <div class="mock-log">
+        📣 Contestant just turned the Bargain Golem into scrap metal with a Power Slap! [CROWD CHEERS]<br>
+        <span class="cat">🐈 A frying pan? You're one step closer to a cooking career.</span>
+      </div>
+    </div>
+
+    <section class="features">
+      <div class="section-head">
+        <h2>What's Actually In It</h2>
+        <p>Built as a single-file FastAPI app — the model narrates, the backend decides.</p>
+      </div>
+      <div class="feature-grid">
+        <div class="feature">
+          <h3>Two Voices, One Broadcast</h3>
+          <p>A snarky game-show announcer and your deeply unimpressed cat companion react to
+          every turn — narration only, no invented numbers.</p>
+        </div>
+        <div class="feature">
+          <h3>Deterministic Combat</h3>
+          <p>Hit chance, damage, crits, loot, and XP are all resolved by plain Python before the
+          model ever sees the turn. The LLM can't drift your stats.</p>
+        </div>
+        <div class="feature">
+          <h3>Full Character Panel</h3>
+          <p>Level, XP, HP/mana, five stats, equipped gear, inventory, skills with cooldowns,
+          and stacking curses/boons.</p>
+        </div>
+        <div class="feature">
+          <h3>3 Floors, Each With a Boss</h3>
+          <p>Two regular encounters and a boss fight per floor, plus a Sponsor Booth shop
+          between floors for gear and a free risk/reward pull.</p>
+        </div>
+        <div class="feature">
+          <h3>A Cat That Actually Helps</h3>
+          <p>Beyond banter, the cat lands a small automatic assist hit most rounds — no mana or
+          turn spent.</p>
+        </div>
+        <div class="feature">
+          <h3>Progress Autosaves</h3>
+          <p>Every turn writes to a save file, so a server restart resumes your run instead of
+          wiping it.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="run-it">
+      <div class="section-head">
+        <h2>How to Run It Locally</h2>
+        <p>It's a single Python file. You'll need an OpenRouter API key.</p>
+      </div>
+      <ol class="steps">
+        <li>Clone the repo and move into it.</li>
+        <li>Create a file called <code>env.txt</code> in that folder with one line:
+          <code>OPENAI_API_KEY=your_openrouter_key_here</code></li>
+        <li>Install dependencies and start the server.</li>
+        <li>Open the app in your browser.</li>
+      </ol>
+      <pre>git clone https://github.com/firekarrde/DCC.git
+cd DCC
+pip install fastapi uvicorn openai python-dotenv
+
+echo "OPENAI_API_KEY=your_openrouter_key_here" > env.txt
+
+uvicorn dungeon_app:app --host 0.0.0.0 --port 8000
+# then open http://localhost:8000</pre>
+    </section>
+
+    <footer>
+      THE PROGRAM is an original, non-commercial project. Any resemblance to dungeon-themed
+      reality-TV media is purely thematic — no names, characters, or text from any existing
+      book or show are used.
+    </footer>
+  </div>
+</body>
+</html>
