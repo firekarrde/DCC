@@ -28,7 +28,7 @@ GAME_STATE = None
 # ---------------------------------------------------------------------------
 
 ITEMS = {
-    "rusty_shiv": {"name": "Rusty Shiv", "type": "weapon", "power": 5,
+    "rusty_shiv": {"name": "Rusty Shiv", "type": "weapon", "power": 8,
                    "description": "It's seen better days. So have you."},
     "frying_pan": {"name": "Cast-Iron Frying Pan", "type": "weapon", "power": 8,
                    "description": "Sponsor-provided. Surprisingly good in a fight."},
@@ -68,28 +68,33 @@ BOONS = {
 }
 
 MONSTERS = {
-    "rat_bot_swarm": {"name": "Rat-Bot Swarm", "hp": 18, "power": 4, "def": 1, "agi": 8,
-                       "xp_reward": 12, "gold_range": [2, 6], "loot_table": [("patchup_potion", 0.2)]},
-    "sewer_jelly": {"name": "Sewer Jelly", "hp": 30, "power": 5, "def": 3, "agi": 2,
-                     "xp_reward": 16, "gold_range": [3, 8], "loot_table": [("sewer_boots", 0.3)]},
-    "plumbing_warden": {"name": "The Plumbing Warden", "hp": 55, "power": 8, "def": 4, "agi": 4,
-                         "xp_reward": 40, "gold_range": [15, 25], "loot_table": [("frying_pan", 1.0)],
+    "rat_bot_swarm": {"name": "Rat-Bot Swarm", "hp": 16, "power": 3, "def": 0, "agi": 8,
+                       "xp_reward": 16, "gold_range": [2, 6], "loot_table": [("patchup_potion", 0.35)]},
+    "sewer_jelly": {"name": "Sewer Jelly", "hp": 26, "power": 4, "def": 1, "agi": 2,
+                     "xp_reward": 22, "gold_range": [3, 8],
+                     "loot_table": [("sewer_boots", 0.35), ("patchup_potion", 0.25)]},
+    "plumbing_warden": {"name": "The Plumbing Warden", "hp": 46, "power": 7, "def": 2, "agi": 4,
+                         "xp_reward": 40, "gold_range": [15, 25],
+                         "loot_table": [("frying_pan", 1.0), ("patchup_potion", 0.5)],
                          "boss": True},
-    "bargain_golem": {"name": "Bargain Golem", "hp": 45, "power": 7, "def": 7, "agi": 2,
-                       "xp_reward": 30, "gold_range": [10, 18], "loot_table": [("static_charm", 0.25)]},
-    "con_artist_sprite": {"name": "Con-Artist Sprite", "hp": 26, "power": 6, "def": 2, "agi": 12,
-                           "xp_reward": 26, "gold_range": [8, 16], "loot_table": [("patchup_potion", 0.3)],
-                           "steals_gold": True},
-    "the_auctioneer": {"name": "The Auctioneer", "hp": 70, "power": 10, "def": 6, "agi": 6,
-                        "xp_reward": 60, "gold_range": [25, 40], "loot_table": [("auctioneer_gavel", 1.0)],
+    "bargain_golem": {"name": "Bargain Golem", "hp": 40, "power": 6, "def": 4, "agi": 2,
+                       "xp_reward": 30, "gold_range": [10, 18],
+                       "loot_table": [("static_charm", 0.35), ("patchup_potion", 0.25)]},
+    "con_artist_sprite": {"name": "Con-Artist Sprite", "hp": 24, "power": 5, "def": 1, "agi": 12,
+                           "xp_reward": 26, "gold_range": [8, 16],
+                           "loot_table": [("patchup_potion", 0.4)], "steals_gold": True},
+    "the_auctioneer": {"name": "The Auctioneer", "hp": 62, "power": 8, "def": 4, "agi": 6,
+                        "xp_reward": 60, "gold_range": [25, 40],
+                        "loot_table": [("auctioneer_gavel", 1.0), ("static_charm", 0.4), ("patchup_potion", 0.5)],
                         "boss": True},
-    "feedback_wisp": {"name": "Feedback Wisp", "hp": 35, "power": 7, "def": 3, "agi": 9,
-                       "xp_reward": 34, "gold_range": [12, 20], "loot_table": [("static_charm", 0.3)],
-                       "drains_mana": True},
-    "rerun_wraith": {"name": "Rerun Wraith", "hp": 40, "power": 8, "def": 4, "agi": 5,
-                      "xp_reward": 36, "gold_range": [12, 22], "loot_table": [("patchup_potion", 0.3)]},
-    "the_producer": {"name": "The Producer", "hp": 100, "power": 12, "def": 8, "agi": 7,
-                      "xp_reward": 120, "gold_range": [50, 80], "loot_table": [], "boss": True,
+    "feedback_wisp": {"name": "Feedback Wisp", "hp": 32, "power": 5, "def": 1, "agi": 9,
+                       "xp_reward": 34, "gold_range": [12, 20],
+                       "loot_table": [("static_charm", 0.35), ("patchup_potion", 0.25)], "drains_mana": True},
+    "rerun_wraith": {"name": "Rerun Wraith", "hp": 36, "power": 6, "def": 2, "agi": 5,
+                      "xp_reward": 36, "gold_range": [12, 22], "loot_table": [("patchup_potion", 0.4)]},
+    "the_producer": {"name": "The Producer", "hp": 85, "power": 9, "def": 5, "agi": 7,
+                      "xp_reward": 120, "gold_range": [50, 80],
+                      "loot_table": [("patchup_potion", 0.6), ("static_charm", 0.5)], "boss": True,
                       "final_boss": True},
 }
 
@@ -123,7 +128,8 @@ ANNOUNCER: <1-3 punchy, snarky, game-show-host sentences reacting to the event(s
 "Contestant." Refer to the dungeon as "the Program" or "the Descent." Dark humor is fine; over-the-top \
 show-biz energy is the goal. You may use at most one bracketed sound cue like [AIR HORN] or [CROWD GASPS].
 CAT: <0-1 short, dry, self-serving sentence from the Contestant's cat companion - only include this line \
-if the cat would plausibly react. Omit it entirely otherwise.
+if the cat would plausibly react. Omit it entirely otherwise. When the event list includes a \
+"cat_assist" entry, the cat actually helped in the fight - narrate that as a real action, not just banter.
 
 Hard rules:
 - Never state, imply, or invent any number (damage, HP, gold, XP, chance) that is not already present in \
@@ -138,6 +144,7 @@ OPENING_LINE = ("Ladies, gentlemen, and things that used to be either: welcome b
                 "by one deeply unimpressed cat. Let's see how far boxers-and-bravado gets him. Floor One... GO!")
 
 STAGE_ORDER = ["encounter_1", "encounter_2", "boss", "reward"]
+CAT_ASSIST_CHANCE = 0.35
 
 
 # ---------------------------------------------------------------------------
@@ -212,11 +219,11 @@ def new_game():
         "status": "in_progress",
         "player": {
             "name": "The Guy in Boxers",
-            "level": 1, "xp": 0, "xp_to_next": 40,
-            "hp": 30, "hp_max": 30, "mana": 10, "mana_max": 10, "gold": 20,
+            "level": 1, "xp": 0, "xp_to_next": 25,
+            "hp": 40, "hp_max": 40, "mana": 10, "mana_max": 10, "gold": 20,
             "stats": {"str": 5, "agi": 5, "end": 5, "int": 5, "luck": 5},
             "equipped": {"weapon": "rusty_shiv", "armor": None, "trinket": None},
-            "inventory": [{"id": "patchup_potion", "qty": 1}],
+            "inventory": [{"id": "patchup_potion", "qty": 3}],
             "skills": ["basic_attack", "power_slap", "cats_distraction"],
             "skill_cooldowns": {"power_slap": 0, "cats_distraction": 0},
             "curses": [],
@@ -316,6 +323,16 @@ def run_monster_turn(state, events):
     player = state["player"]
     combat = state["combat"]
     monster = MONSTERS[combat["monster_id"]]
+
+    if random.random() < CAT_ASSIST_CHANCE:
+        assist_dmg = random.randint(2, 4)
+        combat["monster_hp"] = max(0, combat["monster_hp"] - assist_dmg)
+        events.append({"type": "cat_assist", "damage": assist_dmg,
+                        "monster_hp_remaining": combat["monster_hp"]})
+        if combat["monster_hp"] <= 0:
+            handle_monster_death(state, events)
+            return
+
     hit_penalty = combat.pop("monster_hit_penalty", 0.0)
     result = resolve_hit(monster["power"], 0, monster["agi"], 0,
                           get_armor_def(player), player["stats"]["agi"],
