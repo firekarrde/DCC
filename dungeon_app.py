@@ -40,15 +40,22 @@ ITEMS = {
                       "description": "Crackles faintly. Makes your hits meaner."},
     "patchup_potion": {"name": "Patch-Up Potion", "type": "consumable", "heal": 15,
                         "description": "Tastes like a Band-Aid. Works like one too."},
+    "mana_tonic": {"name": "Mana Tonic", "type": "consumable", "mana": 10,
+                    "description": "Fizzy, blue, and faintly radioactive-tasting. Refills a solid chunk of mana."},
 }
 
 SKILLS = {
-    "basic_attack": {"name": "Basic Attack", "unlock_level": 1, "mana_cost": 0, "cooldown": 0, "damage_mult": 1.0},
-    "power_slap": {"name": "Power Slap", "unlock_level": 1, "mana_cost": 0, "cooldown": 2, "damage_mult": 1.6},
-    "cats_distraction": {"name": "Cat's Distraction", "unlock_level": 1, "mana_cost": 5, "cooldown": 3},
-    "adrenaline_surge": {"name": "Adrenaline Surge", "unlock_level": 2, "mana_cost": 10, "cooldown": 4, "heal": 12},
+    "basic_attack": {"name": "Basic Attack", "unlock_level": 1, "mana_cost": 0, "cooldown": 0, "damage_mult": 1.0,
+                      "description": "A standard hit with your equipped weapon. No cost, no cooldown."},
+    "power_slap": {"name": "Power Slap", "unlock_level": 1, "mana_cost": 0, "cooldown": 2, "damage_mult": 1.6,
+                    "description": "A heavier swing for 60% more damage than a basic attack. 2-round cooldown."},
+    "cats_distraction": {"name": "Cat's Distraction", "unlock_level": 1, "mana_cost": 5, "cooldown": 3,
+                          "description": "Your cat darts in and distracts the enemy, lowering its chance to hit you next turn. Costs 5 mana, 3-round cooldown."},
+    "adrenaline_surge": {"name": "Adrenaline Surge", "unlock_level": 2, "mana_cost": 10, "cooldown": 4, "heal": 12,
+                          "description": "Heals you for 12 HP and boosts your next attack's damage by 30%. Costs 10 mana, 4-round cooldown."},
     "improvised_throw": {"name": "Improvised Throw", "unlock_level": 3, "mana_cost": 0, "cooldown": 3,
-                          "damage_mult": 2.0},
+                          "damage_mult": 2.0,
+                          "description": "Hurl an item from your inventory for a heavy burst of damage (2x normal). Consumes the item. 3-round cooldown."},
 }
 
 CURSES = {
@@ -100,19 +107,20 @@ MONSTERS = {
 
 FLOORS = [
     {"theme": "The Neon Sewer Arena", "encounters": ["rat_bot_swarm", "sewer_jelly"],
-     "boss": "plumbing_warden", "shop": ["frying_pan", "sewer_boots", "patchup_potion"]},
+     "boss": "plumbing_warden", "shop": ["frying_pan", "sewer_boots", "patchup_potion", "mana_tonic"]},
     {"theme": "The Gilded Arena", "encounters": ["bargain_golem", "con_artist_sprite"],
-     "boss": "the_auctioneer", "shop": ["static_charm", "patchup_potion"]},
+     "boss": "the_auctioneer", "shop": ["static_charm", "patchup_potion", "mana_tonic"]},
     {"theme": "The Static Wastes", "encounters": ["feedback_wisp", "rerun_wraith"],
-     "boss": "the_producer", "shop": ["patchup_potion", "static_charm"]},
+     "boss": "the_producer", "shop": ["patchup_potion", "static_charm", "mana_tonic"]},
 ]
 
-SHOP_PRICES = {"frying_pan": 30, "sewer_boots": 20, "patchup_potion": 12, "static_charm": 40}
+SHOP_PRICES = {"frying_pan": 30, "sewer_boots": 20, "patchup_potion": 12, "static_charm": 40, "mana_tonic": 15}
 
 CATALOG = {
     "items": {iid: {"name": d["name"], "type": d["type"], "description": d.get("description", "")}
               for iid, d in ITEMS.items()},
-    "skills": {sid: {"name": d["name"], "mana_cost": d.get("mana_cost", 0), "cooldown": d.get("cooldown", 0)}
+    "skills": {sid: {"name": d["name"], "mana_cost": d.get("mana_cost", 0), "cooldown": d.get("cooldown", 0),
+                      "description": d.get("description", "")}
                for sid, d in SKILLS.items()},
     "curses": {cid: {"name": d["name"], "description": d["description"]} for cid, d in CURSES.items()},
     "boons": {bid: {"name": d["name"], "description": d["description"]} for bid, d in BOONS.items()},
@@ -452,11 +460,18 @@ def handle_use_item(state, payload, events):
         return
     item = ITEMS[item_id]
     heal = item.get("heal", 0)
+    mana_restore = item.get("mana", 0)
     player["hp"] = min(player["hp_max"], player["hp"] + heal)
+    player["mana"] = min(player["mana_max"], player["mana"] + mana_restore)
     entry["qty"] -= 1
     if entry["qty"] <= 0:
         player["inventory"].remove(entry)
-    events.append({"type": "item_used", "item": item["name"], "heal": heal})
+    ev = {"type": "item_used", "item": item["name"]}
+    if heal:
+        ev["heal"] = heal
+    if mana_restore:
+        ev["mana_restored"] = mana_restore
+    events.append(ev)
     if state["combat"] and state["combat"].get("active"):
         run_monster_turn(state, events)
 
@@ -863,6 +878,15 @@ HTML_TEMPLATE = """
     return choice;
   }
 
+  function titleFor(choice) {
+    if (choice === "attack") return CATALOG.skills.basic_attack.description || "";
+    const parts = choice.split(":");
+    if (parts[0] === "skill") return (CATALOG.skills[parts[1]] || {}).description || "";
+    if (parts[0] === "use_item") return (CATALOG.items[parts[1]] || {}).description || "";
+    if (parts[0] === "shop_buy") return (CATALOG.items[parts[1]] || {}).description || "";
+    return "";
+  }
+
   function render(data) {
     lastData = data;
     const p = data.player;
@@ -891,6 +915,7 @@ HTML_TEMPLATE = """
       const name = id ? CATALOG.items[id].name : "(none)";
       const li = document.createElement("li");
       li.textContent = slot.toUpperCase() + ": " + name;
+      if (id) li.title = CATALOG.items[id].description;
       eq.appendChild(li);
     });
 
@@ -911,6 +936,7 @@ HTML_TEMPLATE = """
       const cd = p.skill_cooldowns[sid] || 0;
       const li = document.createElement("li");
       li.textContent = s.name + (s.mana_cost ? " (" + s.mana_cost + " MP)" : "") + (cd > 0 ? " [CD " + cd + "]" : "");
+      li.title = s.description || "";
       sk.appendChild(li);
     });
 
@@ -967,6 +993,7 @@ HTML_TEMPLATE = """
       const btn = document.createElement("button");
       btn.className = "action-btn";
       btn.textContent = labelFor(choice);
+      btn.title = titleFor(choice);
       btn.addEventListener("click", function () { doAction(choice); });
       actions.appendChild(btn);
     });
